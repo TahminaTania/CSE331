@@ -1,0 +1,160 @@
+org 100h
+
+.model small
+
+.data
+    newl db 10, 13, "$"
+    msg1 db "Enter the sides of triangle:$"
+    msg2 db "It is a right-angled triangle$"
+    msg3 db "It is not a right-angled triangle$"
+    num db ?
+    a db ?
+    b db ?
+    c db ?
+    
+    
+.code
+    main proc
+    
+    mov ax, @data
+    mov ds, ax
+    
+    lea dx, msg1 
+    mov ah, 09h
+    int 21h
+    lea dx, newl
+    int 21h
+    
+    I1:
+    mov ah, 01h
+    int 21h
+    sub al, 30h
+    mov bh, al
+    mov a, bh
+    int 21h
+    cmp al, 13
+    je I2
+    sub al, 30h
+    mov bh, al
+    mov al, a
+    mov bl, 10
+    mul bl
+    add al, bh
+    mov dl, al
+    mov a, dl
+    jmp I2
+    
+    I2:
+    mov ah, 09h
+    lea dx, newl
+    int 21h
+    mov ah, 01h
+    int 21h
+    sub al, 30h
+    mov bh, al
+    mov b, bh
+    int 21h
+    cmp al, 13
+    je I3
+    sub al, 30h
+    mov bh, al
+    mov al, b
+    mov bl, 10
+    mul bl
+    add al, bh
+    mov dl, al
+    mov b, dl
+    jmp I3
+    
+    
+    I3:
+    mov ah, 09h
+    lea dx, newl
+    int 21h
+    mov ah, 01h
+    int 21h
+    sub al, 30h
+    mov bh, al
+    mov c, bh
+    int 21h
+    cmp al, 13
+    je check1
+    sub al, 30h
+    mov bh, al
+    mov al, c
+    mov bl, 10
+    mul bl
+    add al, bh
+    mov dl, al
+    mov c, dl
+    jmp check1
+    
+    check1:
+    mov bh, a
+    mov bl, c
+    cmp bh, bl
+    jle check2
+    mov c, bh
+    mov a, bl
+    jmp check2
+    
+    check2:
+    mov bh, b
+    mov bl, c
+    cmp bh, bl
+    jle check3
+    mov c, bh
+    mov b, bl
+    jmp check3
+    
+    check3:
+    mov ah, 09h
+    lea dx, newl
+    int 21h
+    
+    xor ax, ax
+    mov bh, a
+    mov bl, b
+    mov ch, c
+    
+    mov cl, ch
+    sub cl, bl
+    mov al, bh
+    div cl
+    mov dh, al
+    
+    check4:
+    xor ax, ax
+    mov bh, a
+    mov bl, b
+    mov ch, c
+    
+    mov cl, ch
+    add cl, bl
+    mov al, cl
+    div bh
+    mov dl, al
+    
+    check5:
+    cmp dh, dl
+    je print1
+    jmp print2
+    
+    print1:
+    mov ah, 09h
+    lea dx, msg2
+    int 21h
+    jmp exit
+    
+    print2:
+    mov ah, 09h
+    lea dx, msg3
+    int 21h
+    jmp exit
+    
+    exit:
+    mov ah, 4ch
+    int 21h
+        
+    main endp
+ret
