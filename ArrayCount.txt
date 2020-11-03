@@ -1,0 +1,54 @@
+*** Declare an array of random characters.with char and symbol ***
+***Find the minimum element of the array and print the character.***
+
+
+
+ORG 100H
+
+.MODEL SMALL
+
+.DATA
+          MSG DB 0DH,0AH, "SMALLEST ELEMENT: $"
+          ARRAY DB "fgJN38a$"
+          SMALLEST DB ?
+.CODE 
+MAIN PROC
+   
+        MOV AX,@DATA
+        MOV DS,AX
+        LEA DI,ARRAY
+        XOR CX,CX
+        MOV AL,[DI]:
+        MOV SMALLEST,AL
+        
+        CHECK: 
+        INC DI
+        CMP [DI], '$'
+        JE PRINT
+        MOV BL,[DI]
+        CMP SMALLEST,BL
+        JG MIN
+        JL CHECK
+        
+        MIN:
+        MOV SMALLEST,BL
+        JMP CHECK
+        
+        PRINT:
+        LEA DX,MSG
+        MOV AH,09H
+        INT 21H
+        MOV DL,SMALLEST
+        MOV AH,02H
+        INT 21H
+        
+        MOV AH,4CH
+        INT 21H
+        
+        
+                  
+MAIN ENDP
+END MAIN
+
+
+RET
